@@ -50,7 +50,7 @@ import org.apache.maven.shared.artifact.filter.collection.ArtifactsFilter;
 public class CopyDependenciesMojo
     extends AbstractFromDependenciesMojo
 {
-
+    
     /**
      * @component
      */
@@ -86,7 +86,7 @@ public class CopyDependenciesMojo
         {
             for ( Artifact artifact : artifacts )
             {
-	    		copyArtifact( artifact, this.stripVersion, this.prependGroupId );
+	    		copyArtifact( artifact, this.stripVersion, this.stripClassifier, this.prependGroupId );
             }
         }
         else
@@ -174,6 +174,9 @@ public class CopyDependenciesMojo
      * @param removeVersion
      *            specifies if the version should be removed from the file name
      *            when copying.
+     * @param removeVersion
+     *            specifies if the classifier should be removed from the file name
+     *            when copying.
      * @param prependGroupId
      *            specifies if the groupId should be prepend to the file while copying.
      * @throws MojoExecutionException
@@ -182,7 +185,7 @@ public class CopyDependenciesMojo
      * @see DependencyUtil#copyFile(File, File, Log)
      * @see DependencyUtil#getFormattedFileName(Artifact, boolean)
      */
-    protected void copyArtifact( Artifact artifact, boolean removeVersion, boolean prependGroupId )
+    protected void copyArtifact( Artifact artifact, boolean removeVersion, boolean removeClassifier, boolean prependGroupId )
         throws MojoExecutionException
     {
 
@@ -190,7 +193,7 @@ public class CopyDependenciesMojo
 
         File destDir;
         destDir = DependencyUtil.getFormattedOutputDirectory( useSubDirectoryPerScope, useSubDirectoryPerType, useSubDirectoryPerArtifact,
-                                                              useRepositoryLayout, stripVersion, outputDirectory,
+                                                              useRepositoryLayout, stripVersion, stripClassifier, outputDirectory,
                                                               artifact );
         File destFile = new File( destDir, destFileName );
 
@@ -243,4 +246,8 @@ public class CopyDependenciesMojo
                                    this.useSubDirectoryPerArtifact, this.useSubDirectoryPerType, this.useSubDirectoryPerScope,
                                    this.useRepositoryLayout, this.stripVersion, this.outputDirectory );
     }
+
+
+    
+    
 }

@@ -256,7 +256,7 @@ public class DestFileFilter
         {
             destFolder = DependencyUtil.getFormattedOutputDirectory( useSubDirectoryPerScope, useSubDirectoryPerType,
                                                                      useSubDirectoryPerArtifact, useRepositoryLayout,
-                                                                     removeVersion, this.outputFileDirectory, artifact );
+                                                                     removeVersion, false, this.outputFileDirectory, artifact );
         }
 
         File destFile = null;
