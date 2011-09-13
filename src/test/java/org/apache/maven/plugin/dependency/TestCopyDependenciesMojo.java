@@ -142,7 +142,7 @@ public class TestCopyDependenciesMojo
             while ( iter.hasNext() )
             {
                 Artifact artifact = iter.next();
-                String fileName = DependencyUtil.getFormattedFileName( artifact, false, true);
+                String fileName = DependencyUtil.getFormattedFileName( artifact, false, true, false);
                 File file = new File( mojo.outputDirectory, fileName );
                 assertTrue( file.exists() );
             }
@@ -793,7 +793,7 @@ public class TestCopyDependenciesMojo
         while ( iter.hasNext() )
         {
             Artifact artifact = iter.next();
-            String fileName = DependencyUtil.getFormattedFileName( artifact, false, true );
+            String fileName = DependencyUtil.getFormattedFileName( artifact, false, false, true );
             File file = new File( mojo.outputDirectory, fileName );
             assertTrue( file.exists() );
         }

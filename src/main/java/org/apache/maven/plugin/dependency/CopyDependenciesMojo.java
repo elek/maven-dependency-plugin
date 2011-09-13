@@ -117,8 +117,8 @@ public class CopyDependenciesMojo
 
         if ( isCopyPom() )
         {
-            copyPoms( getOutputDirectory(), artifacts, this.stripVersion );
-            copyPoms( getOutputDirectory(), skippedArtifacts, this.stripVersion );  // Artifacts that already exist may not already have poms.
+            copyPoms( getOutputDirectory(), artifacts, this.stripVersion, this.stripClassifier );
+            copyPoms( getOutputDirectory(), skippedArtifacts, this.stripVersion, this.stripClassifier );  // Artifacts that already exist may not already have poms.
         }
     }
 
@@ -189,7 +189,7 @@ public class CopyDependenciesMojo
         throws MojoExecutionException
     {
 
-        String destFileName = DependencyUtil.getFormattedFileName( artifact, removeVersion, prependGroupId);
+        String destFileName = DependencyUtil.getFormattedFileName( artifact, removeVersion, removeClassifier, prependGroupId);
 
         File destDir;
         destDir = DependencyUtil.getFormattedOutputDirectory( useSubDirectoryPerScope, useSubDirectoryPerType, useSubDirectoryPerArtifact,
@@ -203,7 +203,7 @@ public class CopyDependenciesMojo
     /**
      * Copy the pom files associated with the artifacts.
      */
-    public void copyPoms( File destDir, Set<Artifact> artifacts, boolean removeVersion )
+    public void copyPoms( File destDir, Set<Artifact> artifacts, boolean removeVersion, boolean removeClassifier )
         throws MojoExecutionException
 
     {
@@ -214,7 +214,7 @@ public class CopyDependenciesMojo
             // Copy the pom
             if ( pomArtifact.getFile() != null && pomArtifact.getFile().exists() )
             {
-                File pomDestFile = new File( destDir, DependencyUtil.getFormattedFileName( pomArtifact, removeVersion,
+                File pomDestFile = new File( destDir, DependencyUtil.getFormattedFileName( pomArtifact, removeVersion, removeClassifier,
                                                                                            prependGroupId) );
                 if ( ! pomDestFile.exists() )
                 {

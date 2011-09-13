@@ -52,21 +52,7 @@ public final class DependencyUtil
     public static String getFormattedFileName( Artifact artifact, boolean removeVersion)
     {
         return getFormattedFileName( artifact, removeVersion, false, false );
-    }
-    /**
-     * Builds the file name. If removeVersion is set, then the file name must be reconstructed from the artifactId,
-     * Classifier (if used) and Type. Otherwise, this method returns the artifact file name.
-     * 
-     * @param artifact File to be formatted.
-     * @param removeVersion Specifies if the version should be removed from the file name.
-     * @param removeClassifier Specifies if the classifier should be removed from the file name.
-     * @return Formatted file name in the format artifactId-[version]-[classifier].[type]
-     * @see {@link #getFormattedFileName(Artifact, boolean, boolean)}.
-     */
-    public static String getFormattedFileName( Artifact artifact, boolean removeVersion, boolean removeClassifier )
-    {
-        return getFormattedFileName( artifact, removeVersion, removeClassifier, false );
-    }
+    }    
   
     /**
      * Builds the file name. If removeVersion is set, then the file name must be
