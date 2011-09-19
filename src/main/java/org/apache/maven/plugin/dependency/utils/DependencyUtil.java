@@ -39,7 +39,6 @@ import org.codehaus.plexus.util.StringUtils;
 public final class DependencyUtil
 {
 
-	
     /**
      * Builds the file name. If removeVersion is set, then the file name must be reconstructed from the artifactId,
      * Classifier (if used) and Type. Otherwise, this method returns the artifact file name.
@@ -49,23 +48,9 @@ public final class DependencyUtil
      * @return Formatted file name in the format artifactId-[version]-[classifier].[type]
      * @see {@link #getFormattedFileName(Artifact, boolean, boolean)}.
      */
-    public static String getFormattedFileName( Artifact artifact, boolean removeVersion)
+    public static String getFormattedFileName( Artifact artifact, boolean removeVersion )
     {
-        return getFormattedFileName( artifact, removeVersion, false, false );
-    }
-    /**
-     * Builds the file name. If removeVersion is set, then the file name must be reconstructed from the artifactId,
-     * Classifier (if used) and Type. Otherwise, this method returns the artifact file name.
-     * 
-     * @param artifact File to be formatted.
-     * @param removeVersion Specifies if the version should be removed from the file name.
-     * @param removeClassifier Specifies if the classifier should be removed from the file name.
-     * @return Formatted file name in the format artifactId-[version]-[classifier].[type]
-     * @see {@link #getFormattedFileName(Artifact, boolean, boolean)}.
-     */
-    public static String getFormattedFileName( Artifact artifact, boolean removeVersion, boolean removeClassifier )
-    {
-        return getFormattedFileName( artifact, removeVersion, removeClassifier, false );
+        return getFormattedFileName( artifact, removeVersion, false );
     }
   
     /**
@@ -78,14 +63,12 @@ public final class DependencyUtil
      *            File to be formatted.
      * @param removeVersion
      *            Specifies if the version should be removed from the file name.
-     * @param removeClassifier
-     *            Specifies if the version should be removed from the file name.
      * @param prependGroupId
      *            Specifies if the groupId should be prepended to the file name.
      * @return Formatted file name in the format
      *         [groupId].artifactId-[version]-[classifier].[type]
      */
-    public static String getFormattedFileName( Artifact artifact, boolean removeVersion, boolean removeClassifier, boolean prependGroupId )
+    public static String getFormattedFileName( Artifact artifact, boolean removeVersion, boolean prependGroupId )
     {
         StringBuffer destFileName = new StringBuffer();
         
@@ -106,7 +89,7 @@ public final class DependencyUtil
 
         String classifierString = "";
 
-        if (!removeClassifier &&  StringUtils.isNotEmpty( artifact.getClassifier() ) )
+        if ( StringUtils.isNotEmpty( artifact.getClassifier() ) )
         {
             classifierString = "-" + artifact.getClassifier();
         }
@@ -125,14 +108,13 @@ public final class DependencyUtil
      * @param useRepositoryLayout if dependencies must be moved into a Maven repository layout, if set, other settings
      *            will be ignored.
      * @param removeVersion if the version must not be mentioned in the filename
-     * @param removeClassifier if the classifier must not be mentioned in the filename
      * @param outputDirectory base outputDirectory.
      * @param artifact information about the artifact.
      * @return a formatted File object to use for output.
      */
     public static File getFormattedOutputDirectory( boolean useSubdirsPerScope, boolean useSubdirsPerType,
                                                     boolean useSubdirPerArtifact, boolean useRepositoryLayout,
-                                                    boolean removeVersion, boolean removeClassifier, File outputDirectory, Artifact artifact )
+                                                    boolean removeVersion, File outputDirectory, Artifact artifact )
     {
         StringBuffer sb = new StringBuffer( 128 );
         if ( useRepositoryLayout )
@@ -156,20 +138,20 @@ public final class DependencyUtil
             }
             if ( useSubdirPerArtifact )
             {
-                String artifactString = getDependencyId( artifact, removeVersion, removeClassifier);
+                String artifactString = getDependencyId( artifact, removeVersion );
                 sb.append( artifactString ).append( File.separatorChar );
             }
         }
         return new File( outputDirectory, sb.toString() );
     }
 
-    private static String getDependencyId( Artifact artifact, boolean removeVersion, boolean removeClassifier )
+    private static String getDependencyId( Artifact artifact, boolean removeVersion )
     {
         StringBuffer sb = new StringBuffer();
 
         sb.append( artifact.getArtifactId() );
 
-        if (!removeClassifier &&  StringUtils.isNotEmpty( artifact.getClassifier() ) )
+        if ( StringUtils.isNotEmpty( artifact.getClassifier() ) )
         {
             sb.append( "-" );
             sb.append( artifact.getClassifier() );

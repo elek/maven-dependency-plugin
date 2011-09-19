@@ -32,15 +32,6 @@ public abstract class AbstractFromDependenciesMojo
     extends AbstractDependencyFilterMojo
 {
 
-	/**
-     * Strip artifact classifier during copy
-     *
-     * @optional
-     * @parameter expression="${mdep.stripClassifier}" default-value="false"
-     * @parameter
-     */
-    protected boolean stripClassifier = false;
-    
     /**
      * Strip artifact version during copy
      *
