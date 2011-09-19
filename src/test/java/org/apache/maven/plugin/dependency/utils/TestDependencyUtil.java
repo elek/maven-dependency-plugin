@@ -231,11 +231,11 @@ public class TestDependencyUtil
         expectedResult = "two-sources.jar";
         assertEquals( expectedResult, name );
         
-        name = DependencyUtil.getFormattedFileName( artifact, true , true, false);
+        name = DependencyUtil.getFormattedFileName( artifact, true , true);
         expectedResult = "two.jar";
         assertEquals( expectedResult, name );
         
-        name = DependencyUtil.getFormattedFileName( artifact, false , true, false);
+        name = DependencyUtil.getFormattedFileName( artifact, false , true);
         expectedResult = "two-1.1-SNAPSHOT.jar";
         assertEquals( expectedResult, name );
 
