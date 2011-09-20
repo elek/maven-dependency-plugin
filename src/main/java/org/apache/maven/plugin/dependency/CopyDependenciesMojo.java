@@ -66,6 +66,14 @@ public class CopyDependenciesMojo
      */
     private Map<String, ArtifactRepositoryLayout> repositoryLayouts;
 
+	/**
+     * Strip artifact classifier during copy
+     *
+     * @optional
+     * @parameter expression="${mdep.stripClassifier}" default-value="false"
+     * @parameter
+     */
+    protected boolean stripClassifier = false;
     /**
      * Main entry into mojo. Gets the list of dependencies and iterates through
      * calling copyArtifact.
@@ -86,7 +94,7 @@ public class CopyDependenciesMojo
         {
             for ( Artifact artifact : artifacts )
             {
-	    		copyArtifact( artifact, this.stripVersion, this.prependGroupId );
+	    		copyArtifact( artifact, this.stripVersion, this.prependGroupId, this.stripClassifier );
             }
         }
         else
@@ -164,6 +172,7 @@ public class CopyDependenciesMojo
         }
     }
 
+    
     /**
      * Copies the Artifact after building the destination file name if
      * overridden. This method also checks if the classifier is set and adds it
@@ -182,11 +191,38 @@ public class CopyDependenciesMojo
      * @see DependencyUtil#copyFile(File, File, Log)
      * @see DependencyUtil#getFormattedFileName(Artifact, boolean)
      */
-    protected void copyArtifact( Artifact artifact, boolean removeVersion, boolean prependGroupId )
+    protected void copyArtifact( Artifact artifact, boolean removeVersion, boolean prependGroupId ) 
+    	throws MojoExecutionException
+    {
+    	copyArtifact(artifact, removeVersion, prependGroupId, false);
+    }
+    /**
+     * Copies the Artifact after building the destination file name if
+     * overridden. This method also checks if the classifier is set and adds it
+     * to the destination file name if needed.
+     *
+     * @param artifact
+     *            representing the object to be copied.
+     * @param removeVersion
+     *            specifies if the version should be removed from the file name
+     *            when copying.            
+     * @param prependGroupId
+     *            specifies if the groupId should be prepend to the file while copying.
+     *            
+     * @param removeClassifier
+     *            specifies if the classifier should be removed from the file name
+     *            when copying.
+     * @throws MojoExecutionException
+     *             with a message if an error occurs.
+     *
+     * @see DependencyUtil#copyFile(File, File, Log)
+     * @see DependencyUtil#getFormattedFileName(Artifact, boolean)
+     */
+    protected void copyArtifact( Artifact artifact, boolean removeVersion, boolean prependGroupId, boolean removeClassifier )
         throws MojoExecutionException
     {
 
-        String destFileName = DependencyUtil.getFormattedFileName( artifact, removeVersion, prependGroupId);
+        String destFileName = DependencyUtil.getFormattedFileName( artifact, removeVersion, prependGroupId, removeClassifier);
 
         File destDir;
         destDir = DependencyUtil.getFormattedOutputDirectory( useSubDirectoryPerScope, useSubDirectoryPerType, useSubDirectoryPerArtifact,

@@ -131,6 +131,22 @@ public class TestCopyDependenciesMojo
             assertTrue( file.exists() );
         }
     }
+    
+    public void testStripClassifier()
+            throws Exception
+        {
+            mojo.stripClassifier = true;
+            mojo.execute();
+
+            Iterator<Artifact> iter = mojo.project.getArtifacts().iterator();
+            while ( iter.hasNext() )
+            {
+                Artifact artifact = iter.next();
+                String fileName = DependencyUtil.getFormattedFileName( artifact, false, false, true );
+                File file = new File( mojo.outputDirectory, fileName );
+                assertTrue( file.exists() );
+            }
+        }
 
     public void testNoTransitive()
         throws Exception

@@ -222,6 +222,10 @@ public class TestDependencyUtil
         name = DependencyUtil.getFormattedFileName( artifact, true );
         expectedResult = "two-sources.jar";
         assertEquals( expectedResult, name );
+        
+        name = DependencyUtil.getFormattedFileName( artifact, true, false, true);
+        expectedResult = "two.jar";
+        assertEquals( expectedResult, name );
 
         ah = new DefaultArtifactHandlerStub( "war", null );
         artifact = new DefaultArtifact( "test", "two", vr, Artifact.SCOPE_PROVIDED, "war", "", ah, false );
