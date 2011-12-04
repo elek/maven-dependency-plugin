@@ -15,21 +15,37 @@ public class Format {
 
 	private boolean useBaseVersion = true;
 
+	/**
+	 * Append group Id to the output.
+	 * 
+	 * @parameter expression="${mdep.prependGroupId}" default-value="false"
+	 * @parameter
+	 */
 	private boolean prependGroupId;
 
-	private boolean removeVersion;
-
+	/**
+	 * Remove classifier field.
+	 * 
+	 * @parameter expression="${mdep.removeClassifier}" default-value="false"
+	 * @parameter
+	 */
 	private boolean removeClassifier;
 
+	/**
+	 * Use repository format.
+	 * 
+	 * @parameter expression="${mdep.repositoryFormat}" default-value="false"
+	 * @parameter
+	 */
 	private boolean repositoryFormat;
 
 	/**
 	 * Strip artifact version during copy (only works if prefix is set)
 	 * 
-	 * @parameter expression="${mdep.stripVersion}" default-value="false"
+	 * @parameter expression="${mdep.removeVersion}" default-value="false"
 	 * @parameter
 	 */
-	private boolean stripVersion = false;
+	private boolean removeVersion = false;
 
 	/**
 	 * The prefix to prepend on each dependent artifact. If undefined, the paths
@@ -63,12 +79,17 @@ public class Format {
 
 	public String getFormattedFileName(Artifact artifact) {
 
+		String fs = (fileSeparator == null || (fileSeparator.length() == 0) ? ""
+				+ File.separatorChar
+				: fileSeparator);
 		StringBuilder destFileName = new StringBuilder();
 
+		if (prefix != null) {
+			destFileName.append(prefix).append(fs);
+		}
 		if (repositoryFormat) {
 			//
-			destFileName.append(
-					artifact.getGroupId().replace('.', File.separatorChar))
+			destFileName.append(artifact.getGroupId().replaceAll("\\.", fs))
 					.append(File.separatorChar);
 			// artifact id
 			destFileName.append(artifact.getArtifactId()).append(

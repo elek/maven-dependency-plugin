@@ -27,16 +27,17 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.Comparator;
-import java.util.List;
+import java.util.Set;
 
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.plugin.dependency.fromConfiguration.Filter;
 import org.apache.maven.plugin.dependency.fromConfiguration.Format;
 import org.apache.maven.plugin.dependency.resolution.DependencySource;
 import org.apache.maven.plugin.dependency.resolution.ProjectArtifactSource;
 import org.apache.maven.project.MavenProjectHelper;
+import org.apache.maven.shared.artifact.filter.collection.ArtifactFilterException;
 import org.apache.maven.shared.artifact.filter.collection.ArtifactsFilter;
-import org.apache.maven.shared.dependency.tree.DependencyNode;
 import org.codehaus.plexus.util.IOUtil;
 
 /**
@@ -53,6 +54,12 @@ import org.codehaus.plexus.util.IOUtil;
 public class BuildClasspathMojo extends AbstractDependencyMojo implements
 		Comparator<Artifact> {
 
+	/**
+	 * Filter definition.
+	 * 
+	 * @parameter
+	 */
+	private Filter filter = new Filter();
 	/**
 	 * The format of the output file name/
 	 * 
@@ -133,7 +140,20 @@ public class BuildClasspathMojo extends AbstractDependencyMojo implements
 		dependencies = new ProjectArtifactSource(project);
 
 		StringBuilder b = new StringBuilder();
-		createClasspathString(dependencies.getArtifactTree(), b);
+
+		Set<Artifact> artifacts = (Set<Artifact>) project.getArtifacts();
+
+		try {
+			artifacts = filter.createArtifactFilter().filter(artifacts);
+		} catch (ArtifactFilterException e) {
+			throw new MojoExecutionException("Error on filterint artifacts", e);
+		}
+
+		for (Artifact a : artifacts) {
+			appendArtifactPath(a, b);
+		    b.append(File.pathSeparator);
+		}
+
 		String cpString = b.toString();
 
 		if (outputFile == null) {
@@ -149,20 +169,6 @@ public class BuildClasspathMojo extends AbstractDependencyMojo implements
 		}
 		if (attach) {
 			attachFile(cpString);
-		}
-	}
-
-	private void createClasspathString(DependencyNode rootNode, StringBuilder b) {
-		if (b.length() != 0) {
-			b.append(File.pathSeparator);
-		}
-		for (DependencyNode child : (List<DependencyNode>) rootNode
-				.getChildren()) {
-			appendArtifactPath(child.getArtifact(), b);
-			if (rootNode.getChildren().size() > 0) {
-				createClasspathString(child, b);
-			}
-
 		}
 	}
 
